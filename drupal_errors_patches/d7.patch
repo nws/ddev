@@ -1,0 +1,15 @@
+diff --git a/includes/bootstrap.inc b/includes/bootstrap.inc
+index 53f70e1..0804612 100644
+--- a/includes/bootstrap.inc
++++ b/includes/bootstrap.inc
+@@ -2271,8 +2271,8 @@ function _drupal_exception_handler($exception) {
+  */
+ function _drupal_bootstrap_configuration() {
+   // Set the Drupal custom error handler.
+-  set_error_handler('_drupal_error_handler');
+-  set_exception_handler('_drupal_exception_handler');
++  //set_error_handler('_drupal_error_handler');
++  //set_exception_handler('_drupal_exception_handler');
+ 
+   drupal_environment_initialize();
+   // Start a page timer:

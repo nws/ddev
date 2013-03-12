@@ -1,0 +1,19 @@
+#!/bin/bash
+if [ $# -eq 0 ];then
+	echo "usage: $0 [on/off]"
+	exit 0
+fi
+sudo systemctl stop mysqld.service
+sudo umount /var/lib/mysql >/dev/null 2>/dev/null
+if [ "$1" == "on" ];then
+	sudo mount -t tmpfs -o size=512M tmpfs /var/lib/mysql
+	sudo chown mysql.mysql /var/lib/mysql
+	sudo chmod 770 /var/lib/mysql
+	sudo systemctl start mysqld.service
+	cat <<EOF|mysql -u root
+CREATE DATABASE d7;
+CREATE USER 'd7'@'localhost' IDENTIFIED BY 'd7';
+GRANT ALL ON d7.* TO 'd7'@'localhost';
+EOF
+fi
+sudo systemctl start mysqld.service

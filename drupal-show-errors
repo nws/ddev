@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ROOT="$(dirname "$(readlink -f $0)")"/drupal_errors_patches
+
+if [ $# = 0 ]; then
+	find $ROOT -name '*.patch' -printf "%f\n" | sed 's/\.patch$//'
+else 
+	patch --posix -s -p1 -r - -B /tmp/ < $ROOT/"$1".patch
+fi

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DIR="$(readlink -f .)"
+while [ "$DIR" '!=' '/' ]; do
+	if [ -f "$DIR/.dmp-common" ]; then
+		. "$DIR/.dmp-common"
+		break
+	fi
+	DIR="$(dirname "$DIR")"
+done
+
+mysqldump $M_USERPASS --add-drop-table --no-data $M_DB |grep "^DROP"|mysql $M_USERPASS $M_DB
+fname=${1%.sql.gz}
+zcat $fname.sql.gz|mysql $M_USERPASS $M_DB

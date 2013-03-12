@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DIR="$(readlink -f .)"
+while [ "$DIR" '!=' '/' ]; do
+	if [ -f "$DIR/.dmp-common" ]; then
+		. "$DIR/.dmp-common"
+		break
+	fi
+	DIR="$(dirname "$DIR")"
+done
+
+if [ $# -eq 0 ];then
+	echo "usage: $0 [filename]"
+	exit
+fi
+overwrite=0
+i=0
+while [ $# -gt $i ];do
+	if [ ${!i} == "-y" ];then
+		overwrite=1
+	fi
+	i=$[i+1]
+done
+fname=${!i}".sql.gz"
+if [ -f $fname ];then
+	if [ $overwrite -eq 0 ];then
+		echo -n "do you want to overwrite? y/(n) "
+		read result
+		if [ "$result" != "y" ];then
+			exit 0
+		fi
+	fi
+fi
+mysqldump $M_USERPASS $M_DB|gzip >$fname
